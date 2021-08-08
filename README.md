@@ -1,6 +1,6 @@
 # CUBETIQ Spring Security + JWT
-- Spring Boot + Security: 2.5.3
-- Token Enhancer (Jwt)
+- Spring Security
+- Json Web Token (Jwt)
 
-# Contibutors
+# Contributors
 - Sambo Chea <sombochea@cubetiqs.com>
