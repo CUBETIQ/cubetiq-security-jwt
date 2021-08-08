@@ -25,6 +25,7 @@ class JwtTokenFilter : OncePerRequestFilter() {
 
             filterChain.doFilter(request, response)
         } catch (e: AuthenticationServiceException) {
+            e.printStackTrace()
             val ex = AuthenticationServiceException(e.message, e.cause)
             AuthenticationExceptionEntryPoint().commence(request, response, ex)
         }

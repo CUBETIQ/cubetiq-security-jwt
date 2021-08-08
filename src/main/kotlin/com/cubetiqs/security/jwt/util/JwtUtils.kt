@@ -2,7 +2,6 @@ package com.cubetiqs.security.jwt.util
 
 import com.cubetiqs.security.jwt.JwtNotImplementException
 import com.cubetiqs.security.jwt.UserNotEnabledException
-import org.springframework.http.HttpHeaders
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -138,6 +137,6 @@ object JwtUtils {
         return Jwts.parser()
             .setSigningKey(secretKey)
             .parse(token)
-            .body as Claims
+            .body as? Claims
     }
 }
