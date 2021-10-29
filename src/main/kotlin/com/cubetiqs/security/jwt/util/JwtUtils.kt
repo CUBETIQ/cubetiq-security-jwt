@@ -17,7 +17,7 @@ object JwtUtils {
     private const val AUTHORIZATION_HEADER: String = "Authorization"
     private const val AUTHORIZATION_TYPE = "Bearer "
 
-    private var secretKey: String = "your-secret-key-here-123"
+    private var secretKey: String = "cubetiq007"
     private var tokenExpiredInMillis: Long = 86400000 // 24 hours
     private var passwordStrength: Int = 10
     private var passwordEncoder: PasswordEncoder? = null
