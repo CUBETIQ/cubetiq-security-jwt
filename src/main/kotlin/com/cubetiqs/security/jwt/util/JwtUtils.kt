@@ -1,16 +1,17 @@
 package com.cubetiqs.security.jwt.util
 
-import com.cubetiqs.security.jwt.JwtNotImplementException
-import com.cubetiqs.security.jwt.UserNotEnabledException
-import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
-import java.util.*
+import com.cubetiqs.security.jwt.exception.JwtExpiredTokenException
+import com.cubetiqs.security.jwt.exception.JwtNotImplementException
+import com.cubetiqs.security.jwt.exception.UserNotEnabledException
 import io.jsonwebtoken.*
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import java.security.Key
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 object JwtUtils {
@@ -18,7 +19,7 @@ object JwtUtils {
     private const val AUTHORIZATION_TYPE = "Bearer "
 
     private var secretKey: String = "cubetiq007"
-    private var tokenExpiredInMillis: Long = 86400000 // 24 hours
+    private var tokenExpiredInMillis: Long = 60000 // 24 hours
     private var passwordStrength: Int = 10
     private var passwordEncoder: PasswordEncoder? = null
     private var userDetailsService: UserDetailsService? = null
@@ -134,9 +135,17 @@ object JwtUtils {
     private fun decryptToken(token: String?): Claims? {
         token ?: return null
         val secretKey = getSecretKey()
-        return Jwts.parser()
-            .setSigningKey(secretKey)
-            .parse(token)
-            .body as? Claims
+        return try {
+            Jwts.parser()
+                .setSigningKey(secretKey)
+                .parse(token)
+                .body as? Claims
+        } catch (ex: SignatureException) {
+            ex.printStackTrace()
+            throw SignatureException(ex.message)
+        } catch (ex: ExpiredJwtException) {
+            ex.printStackTrace()
+            throw JwtExpiredTokenException()
+        }
     }
 }

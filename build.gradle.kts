@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+	api(project(":cubetiq-utils"))
+
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 	compileOnly("javax.servlet:javax.servlet-api:4.0.1")
 

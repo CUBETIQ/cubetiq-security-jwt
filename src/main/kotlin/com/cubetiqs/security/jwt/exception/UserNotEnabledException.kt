@@ -1,4 +1,4 @@
-package com.cubetiqs.security.jwt
+package com.cubetiqs.security.jwt.exception
 
 class UserNotEnabledException : RuntimeException {
     constructor() : super()
