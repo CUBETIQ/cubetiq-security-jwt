@@ -1,8 +1,6 @@
 package com.cubetiqs.security.jwt.util
 
-import com.cubetiqs.security.jwt.exception.JwtExpiredTokenException
-import com.cubetiqs.security.jwt.exception.JwtNotImplementException
-import com.cubetiqs.security.jwt.exception.UserNotEnabledException
+import com.cubetiqs.security.jwt.exception.*
 import io.jsonwebtoken.*
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -141,11 +139,15 @@ object JwtUtils {
                 .parse(token)
                 .body as? Claims
         } catch (ex: SignatureException) {
-            ex.printStackTrace()
-            throw SignatureException(ex.message)
+            throw SignatureTokenException("Invalid JWT Signature")
+        } catch (ex: MalformedJwtException) {
+            throw MalformedJwtTokenException("Invalid JWT token")
         } catch (ex: ExpiredJwtException) {
-            ex.printStackTrace()
-            throw JwtExpiredTokenException()
+            throw ExpiredJwtTokenException("Expired JWT token")
+        } catch (ex: UnsupportedJwtException) {
+            throw UnsupportedJwtTokenException("Unsupported JWT exception")
+        } catch (ex: IllegalArgumentException) {
+            throw EmptyJwtClaimsException("Jwt claims string is empty")
         }
     }
 }
