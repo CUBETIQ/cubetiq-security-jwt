@@ -15,7 +15,7 @@ object JsonUtils {
         return objectMapper!!
     }
 
-    fun parseObjectToSting(ob: Any?): String? {
+    fun parseObjectToString(ob: Any?): String? {
         if (ob.isNullObject()) return null
         return when (ob) {
             is String -> ob
