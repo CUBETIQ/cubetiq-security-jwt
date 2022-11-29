@@ -1,6 +1,8 @@
 package com.cubetiqs.security.jwt.util
 
-import com.cubetiqs.security.jwt.exception.*
+import com.cubetiqs.security.jwt.exception.JwtNotImplementException
+import com.cubetiqs.security.jwt.exception.SignatureTokenException
+import com.cubetiqs.security.jwt.exception.UserNotEnabledException
 import io.jsonwebtoken.*
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -132,22 +134,15 @@ object JwtUtils {
 
     private fun decryptToken(token: String?): Claims? {
         token ?: return null
-        val secretKey = getSecretKey()
-        return try {
-            Jwts.parser()
-                .setSigningKey(secretKey)
-                .parse(token)
-                .body as? Claims
-        } catch (ex: SignatureException) {
+        val parser = Jwts.parser().setSigningKey(getSecretKey())
+
+        // Must be checking is signed token first, before decrypt
+        // Avoid the hijacking token
+        if (parser.isSigned(token).not())
             throw SignatureTokenException("Invalid JWT Signature")
-        } catch (ex: MalformedJwtException) {
-            throw MalformedJwtTokenException("Invalid JWT token")
-        } catch (ex: ExpiredJwtException) {
-            throw ExpiredJwtTokenException("Expired JWT token")
-        } catch (ex: UnsupportedJwtException) {
-            throw UnsupportedJwtTokenException("Unsupported JWT exception")
-        } catch (ex: IllegalArgumentException) {
-            throw EmptyJwtClaimsException("Jwt claims string is empty")
-        }
+
+        return parser
+            .parse(token)
+            .body as Claims
     }
 }
