@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-	implementation("io.jsonwebtoken:jjwt:0.9.1")
+	implementation("io.jsonwebtoken:jjwt:0.12.2")
 	compileOnly("javax.servlet:javax.servlet-api:4.0.1")
 
 	implementation("org.springframework.security:spring-security-core")
